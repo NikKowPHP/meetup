@@ -7,10 +7,10 @@
 
 ## Profile Management
 - [x] (UI) Build profile page in `app/profile/page.tsx`
-- [ ] (API) Create profile API endpoint in `pages/api/profile.ts`
-- [ ] (STATE) Manage profile state in `store/profile.ts`
+- [x] (API) Create profile API endpoint in `pages/api/profile.ts`
+- [x] (STATE) Manage profile state in `store/profile.ts`
 
 ## Security
-- [ ] (MIDDLEWARE) Implement auth middleware in `middleware.ts`
-- [ ] (RBAC) Create role-based access control in `lib/auth/rbac.ts`
-- [ ] (VALIDATION) Add input validation for profile updates in `lib/validation/profileSchema.ts`
+- [x] (MIDDLEWARE) Implement auth middleware in `middleware.ts`
+- [x] (RBAC) Create role-based access control in `lib/auth/rbac.ts`
+- [x] (VALIDATION) Add input validation for profile updates in `lib/validation/profileSchema.ts`
