@@ -46,6 +46,28 @@
      - Personal ICS feed
      - WebCal subscription support
 
+4. **Real-time Notifications**
+   - Notification types:
+     - Event reminders
+     - New events matching interests
+     - Engagement confirmations
+   - Components:
+     - `useEngagementNotifications` hook manages state
+     - `Badge` component shows unread count
+     - Toast messages for immediate feedback
+   - Implementation:
+     ```typescript
+     // Example notification payload
+     interface Notification {
+       id: string;
+       userId: string;
+       message: string;
+       type: 'reminder' | 'new_event' | 'confirmation';
+       read: boolean;
+       createdAt: Date;
+     }
+     ```
+
 4. **User Authentication**
    - Supabase Auth implementation:
      - Email/password
@@ -67,6 +89,22 @@
 - Next.js API Routes
 - Prisma ORM with PostgreSQL
 - Redis caching layer (event data)
+
+**Performance Optimizations:**
+1. **Largest Contentful Paint (LCP) Optimization**
+   - `LcpOptimizer` component prioritizes critical resources
+   - Preloads key assets
+   - Implements lazy loading for non-critical elements
+
+2. **Map Tile Caching**
+   - IndexedDB-based caching via `lib/map/caching.ts`
+   - Offline-first strategy for map tiles
+   - Automatic cache invalidation after 24h
+
+3. **Memoization**
+   - Heavy computations memoized via `lib/optimization/memo.ts`
+   - React component memoization
+   - Selector-level caching for Zustand stores
 
 **DevOps:**
 - Vercel hosting (frontend)

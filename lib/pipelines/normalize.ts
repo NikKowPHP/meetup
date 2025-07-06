@@ -11,7 +11,9 @@ export async function normalizeAllEvents(): Promise<NormalizedEvent[]> {
     const eventSources = [
       { name: 'Eventbrite', scraper: scrapeEventbriteEvents },
       { name: 'Meetup', scraper: scrapeMeetupEvents },
-      // Facebook and others would need additional configuration
+      { name: 'Facebook', scraper: scrapeFacebookEvents },
+      { name: 'Blogs', scraper: scrapeBlogEvents },
+      { name: 'Forums', scraper: scrapeForumEvents }
     ];
 
     const allEvents: NormalizedEvent[] = [];

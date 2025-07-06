@@ -31,24 +31,28 @@ interface Tier {
   id: string;
   name: string;
   price: string;
+  priceId: string;
   features: string[];
   recommended?: boolean;
 }
 
 export default function PromotionTiers() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const tiers: Tier[] = [
     {
       id: 'basic',
       name: 'Basic',
       price: '$49',
+      priceId: 'price_1P9zVd2eZvKYlo2CJ5JZJX4X',
       features: ['Standard listing', 'Basic visibility']
     },
     {
       id: 'premium',
       name: 'Premium',
       price: '$99',
+      priceId: 'price_1P9zVd2eZvKYlo2CJ5JZJX4Y',
       features: ['Featured listing', 'Priority placement', 'Enhanced visibility'],
       recommended: true
     },
@@ -56,9 +60,42 @@ export default function PromotionTiers() {
       id: 'enterprise',
       name: 'Enterprise',
       price: '$199',
+      priceId: 'price_1P9zVd2eZvKYlo2CJ5JZJX4Z',
       features: ['Top placement', 'Maximum visibility', 'Premium badge']
     }
   ];
+
+  const handleCheckout = async () => {
+    if (!selectedTier) return;
+    
+    setIsLoading(true);
+    try {
+      const tier = tiers.find(t => t.id === selectedTier);
+      if (!tier) return;
+
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId: tier.priceId
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Checkout failed');
+      }
+
+      const { sessionId } = await response.json();
+      window.location.href = sessionId;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to initiate checkout');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -97,7 +134,12 @@ export default function PromotionTiers() {
       </div>
       {selectedTier && (
         <div className="flex justify-end">
-          <Button>Continue to Payment</Button>
+          <Button
+            onClick={handleCheckout}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Processing...' : 'Continue to Payment'}
+          </Button>
         </div>
       )}
     </div>

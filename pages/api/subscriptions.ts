@@ -56,10 +56,6 @@ async function handlePost(req, res) {
 
   const stripePrice = await stripe.prices.retrieve(priceId);
 
-  if (stripePrice.product !== env.STRIPE_PROMOTION_PRODUCT_ID) {
-    return res.status(400).json({ error: 'Invalid price ID' });
-  }
-
   const customer = await stripe.customers.create({
     email: session.user?.email
   });

@@ -24,6 +24,6 @@ export async function processDatabaseBackup(job: any) {
 
 export function scheduleBackupJobs() {
   scrapingQueue.add('database-backup', {}, {
-    repeat: { pattern: '0 3 * * *' }
+    repeat: { pattern: '0 3 * * 0' }
   });
 }

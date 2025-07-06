@@ -16,6 +16,7 @@ model User {
   name          String?
   subscriptions Subscription[]
   attendances   EventAttendance[] @relation("userAttendances")
+  profile       Profile?
 }
 
 model Subscription {
@@ -57,4 +58,33 @@ model Event {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   attendances EventAttendance[] @relation("eventAttendances")
+}
+
+model ErrorLog {
+  id          String   @id @default(uuid())
+  error_message String
+  stack_trace  String
+  context      String?
+  environment  String
+  createdAt    DateTime @default(now())
+}
+
+model SecurityAlert {
+  id        String   @id @default(uuid())
+  message   String
+  channel   String
+  severity  String
+  sent_at   DateTime @default(now())
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  full_name String?
+  avatar_url String?
+  website   String?
+  updated_at DateTime @updatedAt
+  role      String   @default("user")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
 }

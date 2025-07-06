@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from '../../../hooks/useSession';
-import { supabase } from '../../../lib/auth/supabaseClient';
 
 interface UserSession {
   user?: {
@@ -34,15 +33,18 @@ export default function DataPrivacySettings() {
     setSuccess('');
 
     try {
-      const { error } = await supabase
-        .from('users')
-        .delete()
-        .eq('id', session.user.id);
+      const response = await fetch('/api/user/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        throw new Error('Failed to delete data');
+      }
 
       setSuccess('Your data has been successfully deleted.');
-      await supabase.auth.signOut();
       router.push('/');
     } catch (err) {
       console.error('Data deletion error:', err);
