@@ -1,3 +1,5 @@
+import { supabase } from './supabaseClient';
+
 export enum UserRole {
   ADMIN = 'admin',
   MODERATOR = 'moderator',
@@ -50,4 +52,22 @@ export function hasPermission(role: UserRole, resource: ResourceType, action: Ac
   return permissions[role].some(
     (permission) => permission.resource === resource && permission.actions.includes(action)
   );
+}
+
+export async function requireAdmin() {
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session?.user) {
+    throw new Error('Not authenticated');
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .single();
+
+  if (profile?.role !== UserRole.ADMIN) {
+    throw new Error('Admin access required');
+  }
 }

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { stripe } from '../../../lib/payments/stripe';
 import { buffer } from 'micro';
 import { env } from '../../../env.mjs';
+import { processStripeRevenueEvent } from '../../../lib/analytics/revenue';
 
 export const config = {
   api: {
@@ -38,20 +39,7 @@ export default async function handler(
     return res.status(400).json({ error: 'Invalid signature' });
   }
 
-  switch (event.type) {
-    case 'checkout.session.completed':
-      const session = event.data.object;
-      // Handle successful payment
-      console.log('Payment succeeded:', session.id);
-      break;
-    case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object;
-      // Handle successful payment intent
-      console.log('PaymentIntent succeeded:', paymentIntent.id);
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
+  await processStripeRevenueEvent(event);
 
   return res.status(200).json({ received: true });
 }

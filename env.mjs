@@ -2,7 +2,8 @@ import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
 export const env = createEnv({
-  server: {
+    server: {
+      STRIPE_PROMOTION_PRODUCT_ID: z.string().uuid(),
     STRIPE_SECRET_KEY: z.string().min(1),
     STRIPE_WEBHOOK_SECRET: z.string().min(1),
     DATABASE_URL: z.string().url(),

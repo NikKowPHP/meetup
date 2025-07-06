@@ -1,4 +1,5 @@
 export interface NormalizedEvent {
+  id: string;
   title: string;
   start: string;
   end?: string;
@@ -9,4 +10,7 @@ export interface NormalizedEvent {
   };
   imageUrl: string;
   sourceUrl: string;
+  categories: string[];
+  price?: number;
+  source: 'eventbrite' | 'meetup' | 'facebook' | 'blog' | 'forum';
 }

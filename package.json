@@ -17,7 +17,9 @@
     "stripe": "^18.3.0",
     "winston": "^3.17.0",
     "zod": "^3.25.74",
-    "zustand": "^4.5.1"
+    "zustand": "^4.5.1",
+    "chart.js": "^4.4.1",
+    "react-chartjs-2": "^5.2.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.10",

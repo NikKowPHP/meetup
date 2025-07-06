@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { stripe } from '../payments/stripe';
 import { env } from '../../env.mjs';
+import logger from '../monitoring/logger';
 
 const prisma = new PrismaClient();
 
 export async function checkAndRenewSubscriptions() {
+  logger.info('Starting subscription renewal job');
   try {
     // Get subscriptions expiring in the next 7 days
     const expiringSubs = await prisma.subscription.findMany({
@@ -63,8 +65,10 @@ export async function checkAndRenewSubscriptions() {
       }
     }
   } catch (err) {
-    console.error('Subscription renewal job failed:', err);
+    logger.error('Subscription renewal job failed:', err);
+    throw err; // Re-throw for scheduler to handle
   } finally {
     await prisma.$disconnect();
+    logger.info('Finished subscription renewal job');
   }
 }

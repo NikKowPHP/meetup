@@ -8,9 +8,9 @@
 
 ## Subscriptions
 - [x] (DB) Create Subscription model in `prisma/schema.prisma`
-- [ ] (CRON) Set up subscription renewal cron job in `lib/cron/subscriptions.ts`
-- [ ] (API) Create subscription management endpoints in `pages/api/subscriptions.ts`
+- [x] (CRON) Set up subscription renewal cron job in `lib/cron/subscriptions.ts`
+- [x] (API) Create subscription management endpoints in `pages/api/subscriptions.ts`
 
 ## Analytics
-- [ ] (TRACKING) Implement revenue tracking in `lib/analytics/revenue.ts`
-- [ ] (DASHBOARD) Create admin revenue dashboard in `app/admin/revenue/page.tsx`
+- [x] (TRACKING) Implement revenue tracking in `lib/analytics/revenue.ts`
+- [x] (DASHBOARD) Create admin revenue dashboard in `app/admin/revenue/page.tsx`
