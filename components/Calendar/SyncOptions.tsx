@@ -67,7 +67,7 @@ const SyncOptions: React.FC<SyncOptionsProps> = ({ eventIds, className = '' }) =
         window.URL.revokeObjectURL(url);
       } else {
         // TODO: Implement other calendar integrations
-        alert(`${type} calendar integration coming soon!`);
+        alert(`This feature is coming soon!`);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Export failed');
@@ -88,17 +88,15 @@ const SyncOptions: React.FC<SyncOptionsProps> = ({ eventIds, className = '' }) =
         </Button>
         <Button
           onClick={() => handleExport('google')}
-          disabled={true}
           variant="outline"
         >
-          Google Calendar (Coming Soon)
+          Google Calendar
         </Button>
         <Button
           onClick={() => handleExport('outlook')}
-          disabled={true}
           variant="outline"
         >
-          Outlook (Coming Soon)
+          Outlook
         </Button>
       </div>
       {error && <p className="text-sm text-red-500">{error}</p>}

@@ -15,6 +15,7 @@ model User {
   email         String         @unique
   name          String?
   subscriptions Subscription[]
+  attendances   EventAttendance[] @relation("userAttendances")
 }
 
 model Subscription {
@@ -26,4 +27,34 @@ model Subscription {
   currentPeriodEnd DateTime
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model EventAttendance {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], name: "userAttendances")
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], name: "eventAttendances")
+  status    String   // 'interested' or 'attending'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, eventId])
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  start       DateTime
+  end         DateTime?
+  location    Json
+  imageUrl    String?
+  sourceUrl   String
+  categories  String[]
+  price       Float?
+  source      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  attendances EventAttendance[] @relation("eventAttendances")
 }

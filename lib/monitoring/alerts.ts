@@ -52,8 +52,13 @@ export class SecurityAlertSystem {
         monitoringLogger.error('Failed to log alert to database:', error);
       }
 
-      // TODO: Actual channel integration would go here
-      monitoringLogger.info(`[${severity}] Alert sent to ${channel}: ${message}`);
+      monitoringLogger.info(`[ALERT DISPATCH] Pretending to send to ${channel}: ${message}`, {
+        severity,
+        channel,
+        message,
+        timestamp: new Date().toISOString(),
+        note: 'This is a simulation - actual channel integration would send via API'
+      });
     } catch (err) {
       monitoringLogger.error('Failed to send alert:', err);
     }

@@ -1,11 +1,11 @@
 {
-  "name": "Meetup Aggregator",
-  "short_name": "Meetups",
+  "name": "EventFlow",
+  "short_name": "EventFlow",
   "description": "Aggregator for local tech meetups and events",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#007bff",
+  "theme_color": "#2563eb",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

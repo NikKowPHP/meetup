@@ -1,26 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createEventFilter } from '../../lib/filters/combinators';
 import { NormalizedEvent } from '../../types/event';
-
-// Mock data - in a real app this would come from your database
-const mockEvents: NormalizedEvent[] = [
-  {
-    id: '1',
-    title: 'Tech Conference',
-    start: '2025-07-15T09:00:00',
-    description: 'Annual technology conference',
-    location: {
-      address: '123 Main St',
-      coordinates: { lat: 40.7128, lng: -74.0060 }
-    },
-    imageUrl: '/images/tech-conf.jpg',
-    sourceUrl: 'https://example.com/tech-conf',
-    categories: ['technology', 'conference'],
-    price: 100,
-    source: 'eventbrite'
-  },
-  // More mock events...
-];
+import { prisma } from '../../lib/prisma';
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,17 +24,38 @@ export default async function handler(
       priceType: priceType as 'free' | 'paid' | 'all' | undefined
     });
 
-    // Filter events
-    let results = mockEvents.filter(filter);
+    // Query events from database
+    const events = await prisma.event.findMany({
+      where: {
+        AND: [
+          categories ? { categories: { hasSome: String(categories).split(',') } } : {},
+          startDate ? { start: { gte: new Date(String(startDate)) } } : {},
+          endDate ? { end: { lte: new Date(String(endDate)) } } : {},
+          priceType === 'free' ? { price: 0 } :
+            priceType === 'paid' ? { price: { gt: 0 } } : {},
+          q ? {
+            OR: [
+              { title: { contains: String(q), mode: 'insensitive' } },
+              { description: { contains: String(q), mode: 'insensitive' } }
+            ]
+          } : {}
+        ]
+      }
+    });
 
-    // Text search if query present
-    if (q) {
-      const query = String(q).toLowerCase();
-      results = results.filter(event => 
-        event.title.toLowerCase().includes(query) || 
-        event.description.toLowerCase().includes(query)
-      );
-    }
+    // Convert to NormalizedEvent format
+    const results: NormalizedEvent[] = events.map(event => ({
+      id: event.id,
+      title: event.title,
+      start: event.start.toISOString(),
+      description: event.description,
+      location: event.location as { address: string; coordinates: { lat: number; lng: number } },
+      imageUrl: event.imageUrl || '',
+      sourceUrl: event.sourceUrl,
+      categories: event.categories,
+      price: event.price || undefined,
+      source: event.source as 'eventbrite' | 'meetup' | 'facebook' | 'blog' | 'forum'
+    }));
 
     return res.status(200).json(results);
   } catch (error) {

@@ -111,8 +111,92 @@
 - Monthly ($9.99) and annual ($99) plans
 - Webhook-driven entitlement management
 
+### 4.3 Admin Revenue Dashboard
+**Purpose:** Provides administrators with visual analytics on revenue streams.
+
+**Key Features:**
+1. **Time-based Views**
+   - Daily, weekly, and monthly revenue breakdowns
+   - Comparative charts showing payment vs subscription revenue
+2. **Data Sources**
+   - Stripe payment processing (one-time payments)
+   - Recurring subscriptions
+   - Promoted listings revenue
+3. **Visualization Components**
+   - Interactive bar charts showing revenue amounts
+   - Transaction volume indicators
+   - Detailed tabular breakdown
+
+**Access Control:**
+- Restricted to users with Admin role
+- Protected by `requireAdmin()` route guard
+
+**Technical Implementation:**
+- Data aggregation via Prisma (lib/analytics/revenue.ts)
+- Chart visualization using Chart.js (app/admin/revenue/RevenueChart.tsx)
+- Real-time updates through Stripe webhooks
+
 ## 5. Compliance Requirements
 - GDPR data processing agreement
 - CCPA opt-out mechanisms
 - Weekly database backups
 - SSL enforced across all endpoints
+
+## 5.1 User Roles & Permissions
+
+## 6. Operations and Monitoring
+**Centralized Monitoring System**
+
+### 6.1 Logging Infrastructure
+- **Winston-based logger** with configurable levels
+- **Error tracking** with stack traces
+- **Database persistence** for critical errors
+- **Contextual logging** for debugging
+
+### 6.2 Alerting System
+- **Multi-channel alerts** (email/slack)
+- **Severity levels**: low, medium, high, critical
+- **Rate limiting** to prevent alert fatigue
+- **Database audit trail** of all alerts
+- **Singleton pattern** ensures single alert source
+
+### 6.3 Security Audits
+- **Weekly automated checks**
+  - Admin password strength verification
+  - System dependency audits (future)
+- **Scheduled execution** (Sundays at 2 AM)
+- **Results logging** to monitoring system
+
+**Technical Implementation:**
+- Primary modules in `lib/monitoring/`
+- Uses Supabase for alert/error storage
+- Integrated with all core systems
+- Extensible for future monitoring needs
+**Role-Based Access Control (RBAC) System**
+
+### Defined Roles
+1. **Admin**
+   - Full system access
+   - Can manage all content and settings
+2. **Moderator**
+   - Can create/update events
+   - Can view and update user profiles
+3. **User**
+   - Can view events
+   - Can manage own profile
+4. **Guest**
+   - Can view public events
+
+### Permission Matrix
+| Resource  | Admin | Moderator | User | Guest |
+|-----------|-------|-----------|------|-------|
+| Events    | CRUD  | CRU       | R    | R     |
+| Profiles  | RUD   | RU        | RU   | -     |
+| Settings  | RU    | -         | -    | -     |
+
+*Legend: C=Create, R=Read, U=Update, D=Delete*
+
+### Technical Implementation
+- Defined in `lib/auth/rbac.ts`
+- Uses `hasPermission(role, resource, action)` for runtime checks
+- Admin-restricted routes use `requireAdmin()` guard

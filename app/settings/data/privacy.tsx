@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useSession } from '../../../hooks/useSession';
 import { supabase } from '../../../lib/auth/supabaseClient';
 
@@ -12,6 +13,7 @@ interface UserSession {
 }
 
 export default function DataPrivacySettings() {
+  const router = useRouter();
   const { session } = useSession() as { session: UserSession };
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState('');
@@ -40,7 +42,8 @@ export default function DataPrivacySettings() {
       if (error) throw error;
 
       setSuccess('Your data has been successfully deleted.');
-      // TODO: Trigger logout and redirect
+      await supabase.auth.signOut();
+      router.push('/');
     } catch (err) {
       console.error('Data deletion error:', err);
       setError('Failed to delete your data. Please try again.');

@@ -16,8 +16,7 @@ export async function runSecurityAudit() {
       logger.warn(`Found ${weakAdminUsers.length} admin users with weak passwords`);
     }
 
-    // 2. Check for outdated dependencies (would need package.json analysis)
-    // This is just a placeholder - actual implementation would require more work
+    logger.info('Dependency audit check is a stub and needs future implementation');
     logger.info('Security audit completed');
     
     return {

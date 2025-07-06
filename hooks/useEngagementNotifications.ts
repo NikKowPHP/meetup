@@ -20,7 +20,7 @@ export default function useEngagementNotifications() {
     const newNotifications: Notification[] = joinedEvents.map(eventId => ({
       id: `notif-${eventId}-${Date.now()}`,
       eventId,
-      eventTitle: `Event ${eventId.slice(0, 6)}`, // Placeholder - would come from API
+      eventTitle: 'You have a new event update',
       type: 'join',
       timestamp: new Date(),
       read: false

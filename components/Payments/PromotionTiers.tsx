@@ -42,20 +42,20 @@ export default function PromotionTiers() {
     {
       id: 'basic',
       name: 'Basic',
-      price: '$5',
+      price: '$49',
       features: ['Standard listing', 'Basic visibility']
     },
     {
       id: 'premium',
       name: 'Premium',
-      price: '$15',
+      price: '$99',
       features: ['Featured listing', 'Priority placement', 'Enhanced visibility'],
       recommended: true
     },
     {
       id: 'enterprise',
       name: 'Enterprise',
-      price: '$30',
+      price: '$199',
       features: ['Top placement', 'Maximum visibility', 'Premium badge']
     }
   ];
