@@ -24,12 +24,12 @@ The audit was highly successful, indicating a codebase that is feature-complete 
 ## P3 - Documentation Updates
 *Tasks to modify documentation files to reflect the reality of the implemented code.*
 
-- [ ] **DOCS**: Add user story for data deletion feature.
+- [x] **DOCS**: Add user story for data deletion feature.
     - **File**: `docs/app_description.md`
     - **Action**: In the "Development Epics & User Stories" section, under "Epic 3: User Onboarding & Authentication", add a new user story: `*   **EF-023: Delete Account:** As a user, I can permanently delete my account and all associated data through a settings page.`
     - **Reason**: Audit finding: "Undocumented Functionality (Documentation Gaps)" for the `User Data Deletion Workflow` located in `app/settings/data/privacy.tsx` and `pages/api/user/delete.ts`.
 
-- [ ] **DOCS**: Update architectural description with the implemented RBAC model.
+- [x] **DOCS**: Update architectural description with the implemented RBAC model.
     - **File**: `docs/app_description.md`
     - **Action**: In section "7.2. Code Quality & Best Practices", add a new sub-section titled "**Security Model**". Describe the granular Role-Based Access Control (RBAC) system from `lib/auth/rbac.ts`, explaining its purpose and mentioning the defined roles (`ADMIN`, `MODERATOR`, `USER`, `GUEST`).
     - **Reason**: Audit finding: "Undocumented Functionality (Documentation Gaps)" for the `Extended Role-Based Access Control (RBAC) Model` found in `lib/auth/rbac.ts`.

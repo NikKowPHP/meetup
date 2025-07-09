@@ -223,6 +223,7 @@ model PushSubscription {
 *   **EF-020: Account Creation:** As a user, I can register for an account using my email or a social provider.
 *   **EF-021: User Login:** As a user, I can log in and out of my account.
 *   **EF-022: View Personal Calendar:** As a logged-in user, I can view a page listing all events I have "Joined".
+*   **EF-023: Delete Account:** As a user, I can permanently delete my account and all associated data through a settings page.
 
 ### **Epic 4: Organizer Event Management & Verification**
 *   **EF-030: Initiate Event Claim:** As a logged-in user, I can find my event and click a "Claim this Event" button.
@@ -255,6 +256,16 @@ The application will be built mobile-first. All UI will be designed for the smal
 *   **Component Scoping:** We will default to Server Components, opting into Client Components (`"use client"`) only for interactive elements.
 *   **End-to-End Type Safety:** `TypeScript`, `Prisma`, and `Zod` will ensure data is strongly typed from the database to the UI.
 *   **Scraping Ethics & Robustness:** All scrapers will respect `robots.txt`, operate at a respectful rate, and clearly attribute the source. They will be wrapped in resilient error-handling logic with automated retries.
+
+### **Security Model**
+The application implements a granular Role-Based Access Control (RBAC) system to manage permissions across different user types. The system, defined in `lib/auth/rbac.ts`, supports the following roles:
+
+* **ADMIN**: Full access to all administrative functions including event curation, claim approvals, and system settings
+* **MODERATOR**: Can moderate content and manage reported issues, but cannot change system settings
+* **USER**: Standard authenticated users with permissions to create, join, and manage their own events
+* **GUEST**: Limited read-only access for unauthenticated users
+
+The RBAC system integrates with Next.js middleware to enforce permissions at both the UI and API levels.
 
 ### 7.3. Observability Strategy
 *   **Error Tracking:** **Sentry** will be integrated to capture all unhandled exceptions and will be configured with **high-priority alerts for any scraper function failures**.
