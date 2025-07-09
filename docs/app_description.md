@@ -33,11 +33,12 @@ graph TD
         K[Firebase Cloud Messaging (FCM)]
     end
 
-    subgraph Content Aggregation Pipeline (Triggered by Cron Job)
-        H(Vercel Cron Job) -- "1. Triggers" --> I{Resilient Scraper Function}
-        I -- "2. Scrapes (with Retries)" --> J[External Event Sites]
-        I -- "3. On Failure: Log & Alert" --> L[Sentry Error Tracking]
-        I -- "4. On Success: Normalize & Save Data" --> F
+    subgraph Content Aggregation Pipeline (Job Queue System)
+        H[node-schedule] -- "1. Schedules Jobs" --> I{BullMQ Queue}
+        I -- "2. Distributes to Workers" --> J[Scraper Workers]
+        J -- "3. Scrapes (with Retries)" --> K[External Event Sites]
+        J -- "4. On Failure: Log & Alert" --> L[Sentry Error Tracking]
+        J -- "5. On Success: Normalize & Save Data" --> F
     end
 
     %% User Facing Flows
@@ -56,7 +57,7 @@ graph TD
 ```
 
 **Flow Description:**
-1.  **Content Aggregation (Cron Job):** A scheduled Vercel Cron Job triggers a serverless scraper function. This function is designed for resilience; it attempts to scrape each source within a `try/catch` block, implementing a **retry mechanism with exponential backoff** for transient network errors. Critical failures are immediately logged to Sentry for alerting.
+1.  **Content Aggregation (Job Queue):** The `node-schedule` library triggers jobs at scheduled intervals, which are added to a `BullMQ` (Redis) queue. Worker processes pull jobs from the queue and execute the scraping tasks with built-in **retry mechanisms and exponential backoff** for transient errors. Failed jobs are automatically retried according to the queue configuration, and critical failures are logged to Sentry for alerting. This architecture provides better resilience and scalability for long-running background tasks.
 2.  **Client (PWA):** The user interacts with the Next.js frontend, rendered server-side for optimal performance and SEO. The Supabase client-side library handles authentication directly and securely.
 3.  **Application Backend (Next.js API Routes):** Core business logic resides here. API routes, protected by JWT verification, handle data retrieval, manage user actions (joining/claiming events), process payments, and trigger push notifications via FCM.
 4.  **Payment Processing:** Stripe handles B2B event promotion purchases and B2C premium subscriptions. A dedicated, secure webhook endpoint, which validates incoming Stripe signatures, listens for Stripe events to update the database in real-time.
@@ -73,7 +74,7 @@ graph TD
 | **Push Notifications**| **Firebase Cloud Messaging (FCM)** | Provides a reliable, free service to deliver push notifications to web clients (PWAs) across all major platforms. |
 | **Web Scraping** | **Puppeteer / Cheerio** | A combination of a headless browser for dynamic sites and a lightweight parser for static sites, wrapped in robust error-handling logic. |
 | **Mapping** | **Mapbox GL JS / React Map GL** | High-performance, customizable, and mobile-friendly vector maps, essential for the core user experience. |
-| **Job Scheduling** | **Vercel Cron Jobs** | Native, reliable solution for triggering our resilient scraper functions on a recurring schedule. |
+| **Job Scheduling** | **BullMQ & node-schedule** | Robust queue system with Redis backend for handling resilient, long-running background tasks, combined with node-schedule for precise timing control. |
 | **Styling** | **Tailwind CSS + shadcn/ui** | Utility-first CSS for rapid UI development with unstyled, accessible components. |
 | **Deployment** | **Vercel** | Premier hosting for Next.js, offering seamless CI/CD, serverless functions, and integrated cron jobs. |
 

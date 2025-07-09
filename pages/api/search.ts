@@ -28,11 +28,11 @@ export default async function handler(
     const events = await prisma.event.findMany({
       where: {
         AND: [
-          categories ? { categories: { hasSome: String(categories).split(',') } } : {},
-          startDate ? { start: { gte: new Date(String(startDate)) } } : {},
-          endDate ? { end: { lte: new Date(String(endDate)) } } : {},
-          priceType === 'free' ? { price: 0 } :
-            priceType === 'paid' ? { price: { gt: 0 } } : {},
+          categories ? { categoryId: { in: String(categories).split(',') } } : {},
+          startDate ? { startTime: { gte: new Date(String(startDate)) } } : {},
+          endDate ? { endTime: { lte: new Date(String(endDate)) } } : {},
+          priceType === 'free' ? { isFree: true } :
+            priceType === 'paid' ? { isFree: false } : {},
           q ? {
             OR: [
               { title: { contains: String(q), mode: 'insensitive' } },
@@ -40,6 +40,13 @@ export default async function handler(
             ]
           } : {}
         ]
+      },
+      orderBy: [
+        { isFeatured: 'desc' },
+        { startTime: 'asc' }
+      ],
+      include: {
+        category: true
       }
     });
 
@@ -47,14 +54,21 @@ export default async function handler(
     const results: NormalizedEvent[] = events.map(event => ({
       id: event.id,
       title: event.title,
-      start: event.start.toISOString(),
+      start: event.startTime.toISOString(),
+      end: event.endTime?.toISOString(),
       description: event.description,
-      location: event.location as { address: string; coordinates: { lat: number; lng: number } },
+      location: {
+        address: event.address || '',
+        coordinates: event.latitude && event.longitude
+          ? { lat: event.latitude, lng: event.longitude }
+          : null
+      },
       imageUrl: event.imageUrl || '',
       sourceUrl: event.sourceUrl,
-      categories: event.categories,
-      price: event.price || undefined,
-      source: event.source as 'eventbrite' | 'meetup' | 'facebook' | 'blog' | 'forum'
+      categories: event.category ? [event.category.name] : [],
+      price: event.isFree ? 0 : undefined,
+      source: 'eventbrite', // Default source
+      status: event.status as 'DRAFT' | 'PUBLISHED' | 'FLAGGED'
     }));
 
     return res.status(200).json(results);

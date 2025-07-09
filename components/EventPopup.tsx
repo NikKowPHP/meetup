@@ -34,6 +34,7 @@ interface EventPopupProps {
   onSave?: () => void;
   onShare?: () => void;
   onClose?: () => void;
+  onClaim?: () => void;
 }
 
 const EventPopup: React.FC<EventPopupProps> = ({
@@ -41,7 +42,8 @@ const EventPopup: React.FC<EventPopupProps> = ({
   onJoin,
   onSave,
   onShare,
-  onClose
+  onClose,
+  onClaim
 }) => {
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { 
@@ -89,27 +91,36 @@ const EventPopup: React.FC<EventPopupProps> = ({
           {event.location.address}
         </div>
         <div className="flex space-x-2">
-          <Button 
-            variant="default" 
+          <Button
+            variant="default"
             onClick={onJoin}
             className="flex-1 py-1 text-sm"
           >
             Join
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={onSave}
             className="flex-1 py-1 text-sm"
           >
             Save
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={onShare}
             className="flex-1 py-1 text-sm"
           >
             Share
           </Button>
+          {onClaim && event.status === 'DRAFT' && (
+            <Button
+              variant="outline"
+              onClick={onClaim}
+              className="flex-1 py-1 text-sm"
+            >
+              Claim Event
+            </Button>
+          )}
         </div>
       </div>
     </div>

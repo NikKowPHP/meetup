@@ -13,4 +13,5 @@ export interface NormalizedEvent {
   categories: string[];
   price?: number;
   source: 'eventbrite' | 'meetup' | 'facebook' | 'blog' | 'forum';
+  status: 'DRAFT' | 'PUBLISHED' | 'FLAGGED';
 }

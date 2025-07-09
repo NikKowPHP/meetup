@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,81 +7,105 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  name          String?
-  subscriptions Subscription[]
-  attendances   EventAttendance[] @relation("userAttendances")
-  profile       Profile?
-}
-
-model Subscription {
-  id          String   @id @default(uuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  priceId     String
-  status      String   // active, canceled, expired
-  currentPeriodEnd DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model EventAttendance {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], name: "userAttendances")
-  eventId   String
-  event     Event    @relation(fields: [eventId], references: [id], name: "eventAttendances")
-  status    String   // 'interested' or 'attending'
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, eventId])
+  id                 String              @id @default(uuid())
+  email              String              @unique
+  name               String?
+  supabaseAuthId     String              @unique @map("supabase_auth_id")
+  stripeCustomerId   String?             @unique @map("stripe_customer_id")
+  subscriptionTier   String              @default("FREE") // FREE, PRO
+  role               Role                @default(USER)
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  
+  organizedEvents    Event[]             @relation("EventOrganizer")
+  eventsAttending    UserAttendingEvent[]
+  eventClaimRequests EventClaimRequest[]
+  pushSubscriptions  PushSubscription[]
 }
 
 model Event {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  start       DateTime
-  end         DateTime?
-  location    Json
-  imageUrl    String?
-  sourceUrl   String
-  categories  String[]
-  price       Float?
-  source      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  attendances EventAttendance[] @relation("eventAttendances")
+  id              String      @id @default(cuid())
+  title           String
+  description     String      @db.Text
+  startTime       DateTime    @map("start_time")
+  endTime         DateTime?   @map("end_time")
+  venueName       String?     @map("venue_name")
+  address         String?
+  latitude        Float?
+  longitude       Float?
+  sourceUrl       String      @map("source_url")
+  imageUrl        String?     @map("image_url")
+  isFree          Boolean     @default(true) @map("is_free")
+  isFeatured      Boolean     @default(false) @map("is_featured")
+  status          String      @default("DRAFT") // DRAFT, PUBLISHED, FLAGGED
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  organizerId     String?     @map("organizer_id")
+  organizer       User?       @relation("EventOrganizer", fields: [organizerId], references: [id])
+  
+  categoryId      String?
+  category        Category?   @relation(fields: [categoryId], references: [id])
+  
+  attendees       UserAttendingEvent[]
+  promotions      Promotion[]
+  claimRequests   EventClaimRequest[]
+
+  @@index([startTime, status])
 }
 
-model ErrorLog {
-  id          String   @id @default(uuid())
-  error_message String
-  stack_trace  String
-  context      String?
-  environment  String
-  createdAt    DateTime @default(now())
+model Category {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  events Event[]
 }
 
-model SecurityAlert {
-  id        String   @id @default(uuid())
-  message   String
-  channel   String
-  severity  String
-  sent_at   DateTime @default(now())
+model UserAttendingEvent {
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, eventId])
 }
 
-model Profile {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  full_name String?
-  avatar_url String?
-  website   String?
-  updated_at DateTime @updatedAt
-  role      String   @default("user")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @unique
+model EventClaimRequest {
+  id                String   @id @default(cuid())
+  status            String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  verificationToken String?  @unique @map("verification_token")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId           String
+  event             Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, eventId])
+}
+
+model Promotion {
+  id             String    @id @default(cuid())
+  eventId        String
+  event          Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  stripeChargeId String    @unique @map("stripe_charge_id")
+  promotionTier  String    @map("promotion_tier")
+  expiresAt      DateTime  @map("expires_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  keys      Json
+  keywords  String[] @default([])
+  createdAt DateTime @default(now()) @map("created_at")
 }

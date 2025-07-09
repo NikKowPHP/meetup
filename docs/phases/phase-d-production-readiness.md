@@ -28,11 +28,11 @@ To harden the application and implement all critical missing business logic from
 
 ## **1. Infrastructure: Observability (Sentry)**
 
-*   [ ] **Task D.1.1: Install Sentry SDK.**
+*   [x] **Task D.1.1: Install Sentry SDK.**
     *   **File:** `package.json`
     *   **Action:** Run the exact command: `npm install @sentry/nextjs`.
 
-*   [ ] **Task D.1.2: Initialize Sentry Configuration.**
+*   [x] **Task D.1.2: Initialize Sentry Configuration.**
     *   **Action:** Create the following three files with the specified content.
     *   **File 1:** `sentry.client.config.ts`
         ```typescript
@@ -59,7 +59,7 @@ To harden the application and implement all critical missing business logic from
         });
         ```
 
-*   [ ] **Task D.1.3: Integrate Sentry with Next.js Build Process.**
+*   [x] **Task D.1.3: Integrate Sentry with Next.js Build Process.**
     *   **File:** `next.config.js`
     *   **Action:** Modify the `module.exports` to be wrapped by `withSentryConfig`.
     *   **Logic:**
@@ -91,11 +91,11 @@ To harden the application and implement all critical missing business logic from
 
 ## **2. Infrastructure: Quality Assurance (Testing)**
 
-*   [ ] **Task D.2.1: Install Testing Dependencies.**
+*   [x] **Task D.2.1: Install Testing Dependencies.**
     *   **File:** `package.json`
     *   **Action:** Run the exact command: `npm install --save-dev jest @types/jest @testing-library/react @testing-library/jest-dom jest-environment-jsdom cypress`.
 
-*   [ ] **Task D.2.2: Configure Jest for Next.js.**
+*   [x] **Task D.2.2: Configure Jest for Next.js.**
     *   **File:** `jest.config.js`
     *   **Action:** Create the file with the following content.
         ```javascript
@@ -108,14 +108,14 @@ To harden the application and implement all critical missing business logic from
         module.exports = createJestConfig(customJestConfig);
         ```
 
-*   [ ] **Task D.2.3: Create Jest Setup File.**
+*   [x] **Task D.2.3: Create Jest Setup File.**
     *   **File:** `jest.setup.js`
     *   **Action:** Create the file with the following content.
         ```javascript
         import '@testing-library/jest-dom/extend-expect';
         ```
 
-*   [ ] **Task D.2.4: Configure Cypress.**
+*   [x] **Task D.2.4: Configure Cypress.**
     *   **File:** `cypress.config.ts`
     *   **Action:** Create the file with the following content.
         ```typescript
@@ -129,7 +129,7 @@ To harden the application and implement all critical missing business logic from
         });
         ```
 
-*   [ ] **Task D.2.5: Add Test Scripts to package.json.**
+*   [x] **Task D.2.5: Add Test Scripts to package.json.**
     *   **File:** `package.json`
     *   **Action:** In the `scripts` object, add two new key-value pairs.
         ```json
@@ -142,7 +142,7 @@ To harden the application and implement all critical missing business logic from
 
 ## **3. Backend: Schema Overhaul (Closing the Spec Gap)**
 
-*   [ ] **Task D.3.1: Overhaul Prisma Schema to Match Specification.**
+*   [x] **Task D.3.1: Overhaul Prisma Schema to Match Specification.**
     *   **File:** `prisma/schema.prisma`
     *   **Action:** Delete all existing content in this file and replace it with the exact schema below.
     *   **Logic:**
@@ -252,12 +252,12 @@ To harden the application and implement all critical missing business logic from
           createdAt DateTime @default(now()) @map("created_at")
         }
         ```
-*   [ ] **Task D.3.2: Generate New Prisma Client.**
+*   [x] **Task D.3.2: Generate New Prisma Client.**
     *   **Action:** Run the exact command: `npx prisma generate`.
 
 ## **4. Feature: Event Curation & Organizer Tools (Epic 4)**
 
-*   [ ] **Task D.4.1: Create API Route for Event Claim Initiation.**
+*   [x] **Task D.4.1: Create API Route for Event Claim Initiation.**
     *   **File:** `pages/api/events/[id]/claim.ts`
     *   **Action:** Create a new API route that allows a user to claim an event.
     *   **Logic:**
@@ -267,7 +267,7 @@ To harden the application and implement all critical missing business logic from
         4.  Use `prisma.eventClaimRequest.create` to insert a new request linking the `userId` and `eventId`.
         5.  Return 201 Created on success.
 
-*   [ ] **Task D.4.2: Implement Email Verification for Claims.**
+*   [x] **Task D.4.2: Implement Email Verification for Claims.**
     *   **File:** `pages/api/events/[id]/claim.ts`
     *   **Action:** Extend the previous task to send a verification email.
     *   **Logic:**
@@ -275,7 +275,7 @@ To harden the application and implement all critical missing business logic from
         2.  Update the newly created claim request with the token: `prisma.eventClaimRequest.update({ where: { id: newClaim.id }, data: { verificationToken: token } });`
         3.  (Placeholder for email service) Log the verification URL to the console: `console.log(\`Verification URL: /api/claims/verify?token=${token}\`);`
 
-*   [ ] **Task D.4.3: Create API Route to Handle Claim Verification.**
+*   [x] **Task D.4.3: Create API Route to Handle Claim Verification.**
     *   **File:** `pages/api/claims/verify.ts`
     *   **Action:** Create the endpoint that the user clicks from their email.
     *   **Logic:**
@@ -288,7 +288,7 @@ To harden the application and implement all critical missing business logic from
             b.  Update the associated `Event`'s `status` to `PUBLISHED` and set its `organizerId` to the claimer's user ID.
         6.  On success, redirect the user to the organizer dashboard: `res.redirect('/organizer/dashboard');`
 
-*   [ ] **Task D.4.4: Build Admin Curation & Claim Management Dashboard.**
+*   [x] **Task D.4.4: Build Admin Curation & Claim Management Dashboard.**
     *   **File:** `app/admin/curation/page.tsx`
     *   **Action:** Create the React page for the admin interface.
     *   **Logic:**
@@ -298,7 +298,7 @@ To harden the application and implement all critical missing business logic from
         4.  Render two lists: "Draft Events for Review" and "Pending Claims".
         5.  Each item in "Pending Claims" should have "Approve" and "Reject" buttons that call `PUT /api/admin/claims/[claimId]` with the new status.
 
-*   [ ] **Task D.4.5: Create Admin API for Manual Claim Management.**
+*   [x] **Task D.4.5: Create Admin API for Manual Claim Management.**
     *   **File:** `pages/api/admin/claims/[claimId].ts`
     *   **Action:** Build the secure endpoint for an admin to approve or reject a claim.
     *   **Logic:**
@@ -308,7 +308,7 @@ To harden the application and implement all critical missing business logic from
         4.  If 'APPROVED', use a transaction to update the `EventClaimRequest` and the associated `Event` (set `organizerId` and `status`).
         5.  If 'REJECTED', just update the `EventClaimRequest` status.
 
-*   [ ] **Task D.4.6: Build Organizer's "My Events" Dashboard.**
+*   [x] **Task D.4.6: Build Organizer's "My Events" Dashboard.**
     *   **File:** `app/organizer/dashboard/page.tsx`
     *   **Action:** Create a page for organizers to view their events.
     *   **Logic:**
@@ -316,7 +316,7 @@ To harden the application and implement all critical missing business logic from
         2.  Fetch all events where the `organizerId` matches the current user's ID.
         3.  Display a list of these events. Each event card must include a "Promote Event" button which links to a promotion page.
 
-*   [ ] **Task D.4.7: Add "Claim Event" Button to UI.**
+*   [x] **Task D.4.7: Add "Claim Event" Button to UI.**
     *   **File:** `components/EventPopup.tsx`
     *   **Action:** Add the user-facing button to initiate a claim.
     *   **Logic:**
@@ -326,7 +326,7 @@ To harden the application and implement all critical missing business logic from
 
 ## **5. Feature: B2B Monetization Backend (Epic 5)**
 
-*   [ ] **Task D.5.1: Update Stripe Webhook for Promotions.**
+*   [x] **Task D.5.1: Update Stripe Webhook for Promotions.**
     *   **File:** `pages/api/webhooks/stripe.ts`
     *   **Action:** Enhance the webhook to handle successful B2B promotion checkouts.
     *   **Logic:**
@@ -335,21 +335,21 @@ To harden the application and implement all critical missing business logic from
         3.  Check if `checkoutSession.metadata.eventId` exists.
         4.  If it does, create a `Promotion` record in the database and update the corresponding `Event`'s `isFeatured` flag to `true`. Include the `stripeChargeId` from the session.
 
-*   [ ] **Task D.5.2: Prioritize Featured Events in Search API.**
+*   [x] **Task D.5.2: Prioritize Featured Events in Search API.**
     *   **File:** `pages/api/search.ts`
     *   **Action:** Modify the event fetching logic to always show featured events first.
     *   **Logic:** Add an `orderBy` clause to the main `prisma.event.findMany` call: `orderBy: [{ isFeatured: 'desc' }, { startTime: 'asc' }]`.
 
 ## **6. Feature: Premium User Features (B2C - Epic 6)**
 
-*   [ ] **Task D.6.1: Create API for Managing Push Subscriptions.**
+*   [x] **Task D.6.1: Create API for Managing Push Subscriptions.**
     *   **File:** `pages/api/notifications/subscribe.ts`
     *   **Action:** Build endpoints to save and delete push subscriptions.
     *   **Logic:**
         1.  **POST handler:** Get user from session, get subscription object from body, save to `PushSubscription` table, linking it to the `userId`.
         2.  **DELETE handler:** Get user from session, get `endpoint` from body, delete from `PushSubscription` table.
 
-*   [ ] **Task D.6.2: Enhance Service Worker for Push Events.**
+*   [x] **Task D.6.2: Enhance Service Worker for Push Events.**
     *   **File:** `public/sw.js`
     *   **Action:** Append the following listeners to the end of the file.
         ```javascript
@@ -369,7 +369,7 @@ To harden the application and implement all critical missing business logic from
         });
         ```
 
-*   [ ] **Task D.6.3: Build UI for Notification Preferences.**
+*   [x] **Task D.6.3: Build UI for Notification Preferences.**
     *   **File:** `app/profile/notifications/page.tsx`
     *   **Action:** Create the user-facing page to enable notifications.
     *   **Logic:**
@@ -377,14 +377,14 @@ To harden the application and implement all critical missing business logic from
         2.  Display an "Enable Notifications" button.
         3.  On click, request notification permission. If granted, get the subscription object from `self.registration.pushManager.subscribe()` and `POST` it to `/api/notifications/subscribe`.
 
-*   [ ] **Task D.6.4: Update User Record on B2C Subscription.**
+*   [x] **Task D.6.4: Update User Record on B2C Subscription.**
     *   **File:** `pages/api/webhooks/stripe.ts`
     *   **Action:** Enhance the webhook to manage user subscription status.
     *   **Logic:**
         1.  Add `case 'invoice.paid':` and `case 'customer.subscription.created':`. In the handler, get the `customerId` and user email. Find the user and update `stripeCustomerId` and set `subscriptionTier` to `'PRO'`.
         2.  Add `case 'customer.subscription.deleted':`. In the handler, find the user by `customerId` and set `subscriptionTier` to `'FREE'`.
 
-*   [ ] **Task D.6.5: Implement Stripe Customer Portal.**
+*   [x] **Task D.6.5: Implement Stripe Customer Portal.**
     *   **File 1 (API):** `pages/api/user/manage-subscription.ts`
         *   **Action:** Create an API route that generates a Stripe Billing Portal session.
         *   **Logic:** Get the authenticated user, retrieve their `stripeCustomerId` from the database, call `stripe.billingPortal.sessions.create({ customer: user.stripeCustomerId, return_url: ... })`, and return the session URL as JSON.
@@ -394,5 +394,5 @@ To harden the application and implement all critical missing business logic from
 
 ## **7. Finalization**
 
-*   [ ] **Task D.7.1: Final Prisma Client Generation.**
+*   [x] **Task D.7.1: Final Prisma Client Generation.**
     *   **Action:** Run the exact command `npx prisma generate` to ensure client types are perfectly in sync with all schema changes from this phase.

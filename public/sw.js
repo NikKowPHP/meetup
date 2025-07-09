@@ -1,22 +1,23 @@
-const CACHE_NAME = 'meetup-aggregator-v1';
-const OFFLINE_URL = '/offline.html';
+const CACHE_NAME = "meetup-aggregator-v1";
+const OFFLINE_URL = "/offline.html";
 const PRECACHE_URLS = [
-  '/',
-  '/_next/static/css/main.css',
-  '/_next/static/chunks/main.js',
-  '/_next/static/chunks/pages/_app.js',
-  OFFLINE_URL
+  "/",
+  "/_next/static/css/main.css",
+  "/_next/static/chunks/main.js",
+  "/_next/static/chunks/pages/_app.js",
+  OFFLINE_URL,
 ];
 
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches
+      .open(CACHE_NAME)
       .then((cache) => cache.addAll(PRECACHE_URLS))
       .then(self.skipWaiting())
   );
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -31,8 +32,8 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate') {
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request).catch(() => {
         return caches.match(OFFLINE_URL);
@@ -45,4 +46,27 @@ self.addEventListener('fetch', (event) => {
       })
     );
   }
+});
+
+self.addEventListener("push", (event) => {
+  const data = event.data.json();
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/icons/icon-192x192.png",
+      badge: "/icons/badge-96x96.png",
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then((windowClients) => {
+      if (windowClients.length > 0) {
+        return windowClients[0].focus();
+      }
+      return clients.openWindow("/");
+    })
+  );
 });

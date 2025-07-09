@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSession } from '../../hooks/useSession'
 import { useProfileStore } from '../../store/profile'
+import { Button } from '../../components/Button'
 
 export default function ProfilePage() {
   const { session, isAuthenticated, isLoading } = useSession()
@@ -48,6 +49,24 @@ export default function ProfilePage() {
             Save Changes
           </button>
         </form>
+        
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-4">Subscription</h2>
+          <Button
+            onClick={async () => {
+              const response = await fetch('/api/user/manage-subscription', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+              const { url } = await response.json();
+              window.location.href = url;
+            }}
+          >
+            Manage Subscription
+          </Button>
+        </div>
       </div>
     </div>
   )
