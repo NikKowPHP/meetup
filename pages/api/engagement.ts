@@ -17,14 +17,10 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { eventId, status } = req.body;
+  const { eventId } = req.body;
 
   if (!eventId) {
     return res.status(400).json({ error: 'Event ID is required' });
-  }
-
-  if (status && !['interested', 'attending'].includes(status)) {
-    return res.status(400).json({ error: 'Invalid status value' });
   }
 
   try {
@@ -37,7 +33,7 @@ export default async function handler(
     }
 
     // Check if already attending
-    const existingAttendance = await prisma.eventAttendance.findFirst({
+    const existingAttendance = await prisma.userAttendingEvent.findFirst({
       where: {
         userId: user.id,
         eventId,
@@ -45,32 +41,27 @@ export default async function handler(
     });
 
     if (existingAttendance) {
-      if (status) {
-        // Update existing record with new status
-        const updated = await prisma.eventAttendance.update({
-          where: { id: existingAttendance.id },
-          data: { status }
-        });
-        return res.status(200).json({ status: updated.status });
-      } else {
-        // Remove attendance if no status provided (backward compatibility)
-        await prisma.eventAttendance.delete({
-          where: { id: existingAttendance.id },
-        });
-        return res.status(200).json({ status: null });
-      }
+      // Remove attendance
+      await prisma.userAttendingEvent.delete({
+        where: {
+          userId_eventId: {
+            userId: user.id,
+            eventId
+          }
+        },
+      });
+      return res.status(200).json({ attending: false });
     }
 
     // Create new attendance record
-    const newAttendance = await prisma.eventAttendance.create({
+    await prisma.userAttendingEvent.create({
       data: {
         userId: user.id,
         eventId,
-        status: status || 'interested' // Default to interested if no status provided
       },
     });
 
-    return res.status(200).json({ status: newAttendance.status });
+    return res.status(200).json({ attending: true });
   } catch (error) {
     console.error('Error updating attendance:', error);
     return res.status(500).json({ error: 'Internal server error' });

@@ -13,7 +13,7 @@ This document outlines the prioritized work plan to resolve all discrepancies id
     - **Action**: Run the command `npm install firebase-admin`. This is a prerequisite for enabling server-side push notifications.
     - **Reason**: Audit Finding: [❌ Gap] `sw.js` has push handlers, but no server-side FCM SDK is present in `package.json`.
 
-- [ ] **FIX**: [EF-013]: Correct engagement API to use the valid `UserAttendingEvent` model
+- [x] **FIX**: [EF-013]: Correct engagement API to use the valid `UserAttendingEvent` model
     - **File(s)**: `pages/api/engagement.ts`
     - **Action**: In the `handler` function, replace all instances of `prisma.eventAttendance` with `prisma.userAttendingEvent`. The logic for creating, updating, or deleting records should target the correct model as defined in `prisma/schema.prisma`.
     - **Reason**: Audit Finding: [🟡 Partial] [EF-013]: The API route attempts to use `prisma.eventAttendance`, which does not exist in the schema. The correct model is `UserAttendingEvent`.
