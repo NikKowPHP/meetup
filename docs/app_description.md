@@ -12,6 +12,8 @@ Our monetization model is built on providing clear value to both sides of the ma
 
 The system is designed around a clean separation of concerns within a Next.js monorepo. This approach uses server components for a performant frontend, API routes for backend logic, and separate, robust serverless functions for the data aggregation pipeline, complete with retries and failure monitoring.
 
+EventFlow is implemented as a Progressive Web App (PWA) with offline capabilities, background sync, and push notifications enabled by a service worker. The service worker precaches core assets for fast loading, provides an offline fallback page, and supports push notifications for real-time updates. This allows the app to work reliably even with poor or no network connectivity.
+
 ```mermaid
 graph TD
     subgraph User Device

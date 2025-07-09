@@ -72,7 +72,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: In section "7.3. Observability Strategy", modify the "Error Tracking" point. Replace the mention of Sentry with a description of the implemented custom logging system (`lib/monitoring/logger.ts`) that writes errors to the Supabase database.
     - **Reason**: Audit Finding: [🟡 Mismatch] The codebase uses a custom database logger, not `Sentry` as specified.
 
-- [ ] **DOCS**: Document the implemented Progressive Web App (PWA) architecture.
+- [x] **DOCS**: Document the implemented Progressive Web App (PWA) architecture.
     - **File(s)**: `docs/app_description.md`
     - **Action**: In section "2. Architectural Overview", add a paragraph explaining that EventFlow is a PWA with offline capabilities, background sync, and push notifications, enabled by a service worker (`public/sw.js`).
     - **Reason**: Audit Finding: A major PWA implementation is present in the code but completely undocumented in the specification.
