@@ -24,7 +24,7 @@ This document outlines the prioritized work plan to resolve all discrepancies id
 
 *This tier creates the necessary components, APIs, and pages for specified features that are currently missing from the codebase.*
 
-- [ ] **CREATE**: [EF-022]: Create API endpoint to fetch events a user is attending
+- [x] **CREATE**: [EF-022]: Create API endpoint to fetch events a user is attending
     - **File(s)**: `pages/api/user/attended-events.ts` (new file)
     - **Action**: Create a new API route `GET /api/user/attended-events`. This route should be protected, requiring an authenticated session. It will query the `UserAttendingEvent` model to find all events associated with the session user's ID and return the full event details.
     - **Reason**: Audit Finding: [❌ Unverified] [EF-022]: No dedicated page or component was found that lists all events a user has "Joined". This API is the first step.
