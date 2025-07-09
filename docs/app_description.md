@@ -268,7 +268,7 @@ The application implements a granular Role-Based Access Control (RBAC) system to
 The RBAC system integrates with Next.js middleware to enforce permissions at both the UI and API levels.
 
 ### 7.3. Observability Strategy
-*   **Error Tracking:** **Sentry** will be integrated to capture all unhandled exceptions and will be configured with **high-priority alerts for any scraper function failures**.
+*   **Error Tracking:** A custom Winston-based logger writes errors to the Supabase database, capturing the error message, stack trace, and contextual information. The logger automatically retries failed database writes and falls back to console logging if database writes fail. Scraper failures are logged with full context for debugging.
 *   **Performance Monitoring:** **Vercel Analytics** will be used to monitor Core Web Vitals and overall site performance.
 *   **Structured Logging:** The Content Aggregation Pipeline will use **structured logging** (e.g., JSON format) to provide a clear, traceable record of each run, including a run ID, number of events attempted, successes, failures, and reasons for failure.
 

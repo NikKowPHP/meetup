@@ -67,7 +67,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: In the "Core Tech Stack" table, change the "Mapping" component's technology from "Mapbox GL JS / React Map GL" to "Leaflet / React-Leaflet".
     - **Reason**: Audit Finding: [🟡 Mismatch] The codebase uses `Leaflet` for maps, but the specification documents `Mapbox`.
 
-- [ ] **DOCS**: Update the observability strategy to reflect the implemented custom logger.
+- [x] **DOCS**: Update the observability strategy to reflect the implemented custom logger.
     - **File(s)**: `docs/app_description.md`
     - **Action**: In section "7.3. Observability Strategy", modify the "Error Tracking" point. Replace the mention of Sentry with a description of the implemented custom logging system (`lib/monitoring/logger.ts`) that writes errors to the Supabase database.
     - **Reason**: Audit Finding: [🟡 Mismatch] The codebase uses a custom database logger, not `Sentry` as specified.
