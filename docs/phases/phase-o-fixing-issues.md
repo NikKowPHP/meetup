@@ -37,7 +37,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
 ## P1 - Missing Feature Implementation
 *Tasks to build out the core data aggregation pipeline now that foundational dependencies are in place.*
 
-- [ ] **CREATE**: [Epic 1] Implement the master scheduler to trigger the scraping pipeline.
+- [x] **CREATE**: [Epic 1] Implement the master scheduler to trigger the scraping pipeline.
     - **File(s)**: `lib/scheduler/index.ts`
     - **Action**: In the `startEventScrapingScheduler` function, use `node-schedule` to schedule a recurring job (e.g., '0 */6 * * *' for every 6 hours). The job should add a new task named 'scheduled-scrape' to the `scrapingQueue`.
     - **Reason**: Audit Finding: The entire data aggregation pipeline is non-functional. This task creates the entry point that triggers the pipeline.
