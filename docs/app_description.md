@@ -73,7 +73,7 @@ graph TD
 | **Payments** | **Stripe** | Industry leader for both one-time payments (Checkout) and recurring billing (Subscriptions). |
 | **Push Notifications**| **Firebase Cloud Messaging (FCM)** | Provides a reliable, free service to deliver push notifications to web clients (PWAs) across all major platforms. |
 | **Web Scraping** | **Puppeteer / Cheerio** | A combination of a headless browser for dynamic sites and a lightweight parser for static sites, wrapped in robust error-handling logic. |
-| **Mapping** | **Mapbox GL JS / React Map GL** | High-performance, customizable, and mobile-friendly vector maps, essential for the core user experience. |
+| **Mapping** | **Leaflet / React-Leaflet** | High-performance, customizable, and mobile-friendly vector maps, essential for the core user experience. |
 | **Job Scheduling** | **BullMQ & node-schedule** | Robust queue system with Redis backend for handling resilient, long-running background tasks, combined with node-schedule for precise timing control. |
 | **Styling** | **Tailwind CSS + shadcn/ui** | Utility-first CSS for rapid UI development with unstyled, accessible components. |
 | **Deployment** | **Vercel** | Premier hosting for Next.js, offering seamless CI/CD, serverless functions, and integrated cron jobs. |

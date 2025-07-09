@@ -62,7 +62,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
 ## P3 - Documentation Updates
 *Tasks to modify `app_description.md` to align with the reality of the implemented codebase, resolving all documentation gaps.*
 
-- [ ] **DOCS**: Update the tech stack to reflect the use of Leaflet for mapping.
+- [x] **DOCS**: Update the tech stack to reflect the use of Leaflet for mapping.
     - **File(s)**: `docs/app_description.md`
     - **Action**: In the "Core Tech Stack" table, change the "Mapping" component's technology from "Mapbox GL JS / React Map GL" to "Leaflet / React-Leaflet".
     - **Reason**: Audit Finding: [🟡 Mismatch] The codebase uses `Leaflet` for maps, but the specification documents `Mapbox`.
