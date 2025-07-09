@@ -42,7 +42,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: In the `startEventScrapingScheduler` function, use `node-schedule` to schedule a recurring job (e.g., '0 */6 * * *' for every 6 hours). The job should add a new task named 'scheduled-scrape' to the `scrapingQueue`.
     - **Reason**: Audit Finding: The entire data aggregation pipeline is non-functional. This task creates the entry point that triggers the pipeline.
 
-- [ ] **UPDATE**: [Epic 1] Connect the BullMQ worker to the event normalization pipeline.
+- [x] **UPDATE**: [Epic 1] Connect the BullMQ worker to the event normalization pipeline.
     - **File(s)**: `lib/queues/scraping.ts`
     - **Action**: Ensure the BullMQ `Worker` logic correctly calls the `normalizeAllEvents` function when it processes a 'scheduled-scrape' job. Add logging to indicate job start and completion.
     - **Reason**: Audit Finding: The job queue system is not connected to the actual scraping logic, breaking the data flow.
