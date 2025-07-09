@@ -27,7 +27,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: 1. Fetch the user from the database to get their `stripeCustomerId`. 2. Retrieve the Stripe price using `stripe.prices.retrieve(priceId)`. 3. Add a check to ensure `stripePrice.product` matches `env.STRIPE_PROMOTION_PRODUCT_ID`. 4. Pass the fetched `stripeCustomerId` to the `createCheckoutSession` function.
     - **Reason**: Audit Finding: [❌ Unverified] [EF-041]: The B2B payment API has a critical security flaw, lacking validation for the `priceId`, and a functional bug where it passes the wrong identifier to Stripe.
 
-- [ ] **FIX**: [EF-050] Correct the API endpoint for B2C subscriptions.
+- [x] **FIX**: [EF-050] Correct the API endpoint for B2C subscriptions.
     - **File(s)**: `app/subscribe/page.tsx`
     - **Action**: Change the `fetch` request URL from the non-existent `/api/subscriptions` to `/api/checkout`. This will allow the B2C subscription flow to use the same (now fixed) checkout endpoint, but with different `priceId`s.
     - **Reason**: Audit Finding: [🟡 Partial] [EF-050]: The frontend subscription page calls a non-existent API endpoint, making it impossible for users to subscribe.

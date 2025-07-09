@@ -74,7 +74,7 @@ export default function SubscribePage() {
       const plan = plans.find(p => p.id === selectedPlan);
       if (!plan) return;
 
-      const response = await fetch('/api/subscriptions', {
+      const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
