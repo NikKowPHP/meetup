@@ -17,7 +17,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: Run `npx tailwindcss init -p` to create the `tailwind.config.js` and `postcss.config.js` files. Configure the `content` array in `tailwind.config.js` to scan app and component files.
     - **Reason**: Audit Finding: [❌ Gap] The project is missing Tailwind CSS configuration, despite the specification requiring it for styling.
 
-- [ ] **FIX**: [EF-041] Correct the Stripe session creation logic to use `customerId`.
+- [x] **FIX**: [EF-041] Correct the Stripe session creation logic to use `customerId`.
     - **File(s)**: `lib/payments/stripe.ts`
     - **Action**: Modify the `createCheckoutSession` function signature to accept `customerId: string` instead of `email: string`. The `customer` property in the `stripe.checkout.sessions.create` call should use this `customerId`.
     - **Reason**: Audit Finding: [❌ Unverified] [EF-041]: `createCheckoutSession` incorrectly accepts an `email` instead of the required Stripe `customerId`, which would cause a runtime failure.
