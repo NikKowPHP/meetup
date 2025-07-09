@@ -226,6 +226,7 @@ model PushSubscription {
 *   **EF-021: User Login:** As a user, I can log in and out of my account.
 *   **EF-022: View Personal Calendar:** As a logged-in user, I can view a page listing all events I have "Joined".
 *   **EF-023: Delete Account:** As a user, I can permanently delete my account and all associated data through a settings page.
+*   **EF-024: Cookie Consent:** As a user, I am presented with a cookie consent banner upon my first visit, allowing me to accept or reject non-essential cookies.
 
 ### **Epic 4: Organizer Event Management & Verification**
 *   **EF-030: Initiate Event Claim:** As a logged-in user, I can find my event and click a "Claim this Event" button.

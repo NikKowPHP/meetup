@@ -82,7 +82,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: In section "7.2. Code Quality & Best Practices", add a new sub-section describing the map performance optimizations, including marker clustering (`lib/map/clustering.ts`) and tile caching (`lib/map/caching.ts`).
     - **Reason**: Audit Finding: Significant map performance features (clustering, caching) are implemented but not documented.
 
-- [ ] **DOCS**: Add a user story for the cookie consent feature.
+- [x] **DOCS**: Add a user story for the cookie consent feature.
     - **File(s)**: `docs/app_description.md`
     - **Action**: In "Epic 3: User Onboarding & Authentication", add a new user story: `*   **EF-024: Cookie Consent:** As a user, I am presented with a cookie consent banner upon my first visit, allowing me to accept or reject non-essential cookies.`
     - **Reason**: Audit Finding: A `CookieBanner` component is implemented but is not part of any specified user story.
