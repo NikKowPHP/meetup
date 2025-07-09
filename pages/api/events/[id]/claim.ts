@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import crypto from 'crypto';
 
 export default async function handler(

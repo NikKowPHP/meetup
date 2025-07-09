@@ -1,4 +1,4 @@
-import { Event } from './event';
+import { NormalizedEvent } from './event';
 import { User } from '@prisma/client';
 
 export interface EventClaimRequest {
@@ -10,5 +10,5 @@ export interface EventClaimRequest {
   userId: string;
   user: User;
   eventId: string;
-  event: Event;
+  event: NormalizedEvent;
 }

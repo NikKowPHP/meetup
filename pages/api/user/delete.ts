@@ -19,9 +19,9 @@ export default async function handler(
   try {
     // Delete all user data in a transaction
     await prisma.$transaction([
-      prisma.profile.deleteMany({ where: { userId: session.user.id } }),
-      prisma.subscription.deleteMany({ where: { userId: session.user.id } }),
-      prisma.eventAttendance.deleteMany({ where: { userId: session.user.id } }),
+      prisma.pushSubscription.deleteMany({ where: { userId: session.user.id } }),
+      prisma.eventClaimRequest.deleteMany({ where: { userId: session.user.id } }),
+      prisma.userAttendingEvent.deleteMany({ where: { userId: session.user.id } }),
       prisma.user.delete({ where: { id: session.user.id } })
     ]);
 

@@ -52,7 +52,9 @@ export default async function handler(
           prisma.promotion.create({
             data: {
               eventId,
-              stripeChargeId: checkoutSession.payment_intent,
+              stripeChargeId: typeof checkoutSession.payment_intent === 'string'
+                ? checkoutSession.payment_intent
+                : checkoutSession.payment_intent?.id || '',
               promotionTier: checkoutSession.metadata?.tier || 'STANDARD',
               expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
             }
@@ -70,7 +72,7 @@ export default async function handler(
       const subscription = event.data.object;
       const customerId = typeof subscription.customer === 'string'
         ? subscription.customer
-        : subscription.customer.id;
+        : subscription.customer?.id || '';
 
       await prisma.user.update({
         where: { stripeCustomerId: customerId },

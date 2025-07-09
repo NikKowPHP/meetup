@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,16 +13,20 @@ export default async function handler(
     return res.status(401).json({ error: 'Unauthorized' })
   }
 
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    include: { pushSubscriptions: true }
+  })
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' })
+  }
+
   try {
     switch (req.method) {
       case 'GET':
         // Get user's notification keywords
-        const user = await prisma.user.findUnique({
-          where: { email: session.user.email },
-          include: { pushSubscriptions: true }
-        })
-        
-        if (!user?.pushSubscriptions?.[0]?.keywords) {
+        if (!user.pushSubscriptions?.[0]?.keywords) {
           return res.status(200).json({ keywords: [] })
         }
         
@@ -59,7 +63,7 @@ export default async function handler(
           where: { userId: user.id },
           data: {
             keywords: {
-              set: user.pushSubscriptions[0].keywords.filter(k => k !== keywordToRemove)
+              set: user.pushSubscriptions[0].keywords.filter((k: string) => k !== keywordToRemove)
             }
           }
         })
