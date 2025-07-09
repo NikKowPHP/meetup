@@ -77,7 +77,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: In section "2. Architectural Overview", add a paragraph explaining that EventFlow is a PWA with offline capabilities, background sync, and push notifications, enabled by a service worker (`public/sw.js`).
     - **Reason**: Audit Finding: A major PWA implementation is present in the code but completely undocumented in the specification.
 
-- [ ] **DOCS**: Document the advanced map optimization features.
+- [x] **DOCS**: Document the advanced map optimization features.
     - **File(s)**: `docs/app_description.md`
     - **Action**: In section "7.2. Code Quality & Best Practices", add a new sub-section describing the map performance optimizations, including marker clustering (`lib/map/clustering.ts`) and tile caching (`lib/map/caching.ts`).
     - **Reason**: Audit Finding: Significant map performance features (clustering, caching) are implemented but not documented.

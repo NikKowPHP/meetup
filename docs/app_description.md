@@ -259,6 +259,21 @@ The application will be built mobile-first. All UI will be designed for the smal
 *   **End-to-End Type Safety:** `TypeScript`, `Prisma`, and `Zod` will ensure data is strongly typed from the database to the UI.
 *   **Scraping Ethics & Robustness:** All scrapers will respect `robots.txt`, operate at a respectful rate, and clearly attribute the source. They will be wrapped in resilient error-handling logic with automated retries.
 
+### **Map Performance Optimizations**
+The application implements several advanced map performance features:
+
+1. **Marker Clustering**:
+   - Uses Leaflet.markercluster to group nearby markers at higher zoom levels
+   - Configurable cluster radius and zoom thresholds
+   - Dynamic cluster icons showing marker counts
+   - Smooth animations for cluster expansion/contraction
+
+2. **Tile Caching**:
+   - Implements IndexedDB-based tile caching
+   - Configurable cache expiration (default 24 hours)
+   - Automatic cleanup of oldest tiles when cache limit reached
+   - Reduces network requests for frequently viewed areas
+
 ### **Security Model**
 The application implements a granular Role-Based Access Control (RBAC) system to manage permissions across different user types. The system, defined in `lib/auth/rbac.ts`, supports the following roles:
 
