@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Event, EventClaimRequest } from '@/types/db';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/Button';
 
 export default function AdminCurationPage() {
   const { data: session, status } = useSession();
