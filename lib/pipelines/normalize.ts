@@ -1,10 +1,11 @@
-import { NormalizedEvent } from '../types/event';
-import { logger } from '../utils/logger';
+import { NormalizedEvent } from '../../types/event';
+import logger from '../utils/logger';
 import { scrapeEventbriteEvents } from '../scrapers/eventbrite';
 import { scrapeMeetupEvents } from '../scrapers/meetup';
 import { scrapeFacebookEvents } from '../scrapers/facebook';
 import { scrapeBlogEvents } from '../scrapers/blogs';
 import { scrapeForumEvents } from '../scrapers/forums';
+import { prisma } from '../prisma';
 
 export async function normalizeAllEvents(): Promise<NormalizedEvent[]> {
   try {
@@ -21,11 +22,25 @@ export async function normalizeAllEvents(): Promise<NormalizedEvent[]> {
     for (const source of eventSources) {
       try {
         const events = await source.scraper();
-        const normalized = events.map(event => ({
-          ...event,
-          // Add any additional normalization here
+        const normalized = await Promise.all(events.map(async event => {
+          // Check for existing event with same sourceUrl
+          const existing = await prisma.event.findFirst({
+            where: { sourceUrl: event.sourceUrl }
+          });
+          
+          if (existing) {
+            logger.debug(`Skipping duplicate event: ${event.sourceUrl}`);
+            return null;
+          }
+          
+          return {
+            ...event,
+            // Add any additional normalization here
+          };
         }));
-        allEvents.push(...normalized);
+        
+        // Filter out nulls (duplicates) before adding to allEvents
+        allEvents.push(...normalized.filter(Boolean) as NormalizedEvent[]);
       } catch (error) {
         logger.error(`Failed to normalize ${source.name} events`, error);
       }

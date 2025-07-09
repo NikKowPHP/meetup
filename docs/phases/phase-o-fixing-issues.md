@@ -47,7 +47,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: Ensure the BullMQ `Worker` logic correctly calls the `normalizeAllEvents` function when it processes a 'scheduled-scrape' job. Add logging to indicate job start and completion.
     - **Reason**: Audit Finding: The job queue system is not connected to the actual scraping logic, breaking the data flow.
 
-- [ ] **UPDATE**: [EF-003] Implement event deduplication in the data pipeline.
+- [x] **UPDATE**: [EF-003] Implement event deduplication in the data pipeline.
     - **File(s)**: `lib/pipelines/normalize.ts` (or the worker in `lib/queues/scraping.ts`)
     - **Action**: After scraping events and before saving them to the database, query the `Event` table for an existing event with the same `sourceUrl`. If a match is found, skip the creation of the new event to prevent duplicates.
     - **Reason**: Audit Finding: [❌ Unverified] [EF-003]: The system lacks logic to prevent duplicate events from being inserted into the database.
