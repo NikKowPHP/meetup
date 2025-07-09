@@ -22,7 +22,7 @@ This document provides a prioritized, atomic work plan to resolve all discrepanc
     - **Action**: Modify the `createCheckoutSession` function signature to accept `customerId: string` instead of `email: string`. The `customer` property in the `stripe.checkout.sessions.create` call should use this `customerId`.
     - **Reason**: Audit Finding: [❌ Unverified] [EF-041]: `createCheckoutSession` incorrectly accepts an `email` instead of the required Stripe `customerId`, which would cause a runtime failure.
 
-- [ ] **FIX**: [EF-041] Update checkout API to pass `customerId` and add price validation.
+- [x] **FIX**: [EF-041] Update checkout API to pass `customerId` and add price validation.
     - **File(s)**: `pages/api/checkout.ts`
     - **Action**: 1. Fetch the user from the database to get their `stripeCustomerId`. 2. Retrieve the Stripe price using `stripe.prices.retrieve(priceId)`. 3. Add a check to ensure `stripePrice.product` matches `env.STRIPE_PROMOTION_PRODUCT_ID`. 4. Pass the fetched `stripeCustomerId` to the `createCheckoutSession` function.
     - **Reason**: Audit Finding: [❌ Unverified] [EF-041]: The B2B payment API has a critical security flaw, lacking validation for the `priceId`, and a functional bug where it passes the wrong identifier to Stripe.
