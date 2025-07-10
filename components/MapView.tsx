@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -30,16 +31,33 @@ const MapView: React.FC<MapViewProps> = ({
   center = [52.2297, 21.0122], // Default to Warsaw coordinates
   zoom = 13,
   markers = [],
-  className = 'h-[400px] w-full'
+  className = 'h-full w-full'
 }) => {
+  const mapRef = useRef<L.Map | null>(null);
+
+  // This callback is used to get the Leaflet map instance.
+  const setMap = (mapInstance: L.Map | null) => {
+    mapRef.current = mapInstance;
+  };
+
+  useEffect(() => {
+    // This effect's cleanup function will run when the component unmounts.
+    // This is crucial for handling React 18+ Strict Mode's behavior
+    // of mounting, unmounting, and re-mounting components in development.
+    return () => {
+      mapRef.current?.remove();
+    };
+  }, []); // The empty dependency array ensures this runs only once on mount and unmount.
+
   return (
     <MapContainer 
       center={center} 
       zoom={zoom} 
       className={className}
+      ref={setMap}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {markers.map((marker, index) => (

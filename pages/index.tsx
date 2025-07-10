@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { NormalizedEvent } from '../types/event';
@@ -17,6 +17,10 @@ const EventPopup = dynamic(
 export default function Home() {
   const [selectedEvent, setSelectedEvent] = useState<NormalizedEvent | null>(null);
 
+  const handleMarkerClick = useCallback((event: any) => {
+    setSelectedEvent(event);
+  }, []);
+
   return (
     <>
       <Head>
@@ -27,7 +31,7 @@ export default function Home() {
       <main className="min-h-screen">
         <div className="h-screen w-full">
           <MapView 
-            onMarkerClick={(event) => setSelectedEvent(event)}
+            onMarkerClick={handleMarkerClick}
           />
           
           {selectedEvent && (
