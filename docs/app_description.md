@@ -204,6 +204,7 @@ model PushSubscription {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   endpoint  String   @unique
   keys      Json
+  keywords  String[] @default([])
   createdAt DateTime @default(now()) @map("created_at")
 }
 ```
@@ -247,7 +248,7 @@ model PushSubscription {
 ### **Epic 7: Admin Curation & Analytics**
 *   **EF-ADM-001: Draft Review Dashboard:** As an Admin, I can view a list of all newly scraped events in "DRAFT" status.
 *   **EF-ADM-002: Edit & Approve Events:** As an Admin, I can edit event details and change its status to "PUBLISHED."
-*   **EF-ADM-003: View Key Metrics:** As an Admin, I can see a dashboard with key metrics like users, events ingested, and top categories to monitor platform health.
+*   **EF-ADM-003: View Key Metrics:** As an Admin, I can see a detailed revenue dashboard with daily, weekly, and monthly breakdowns of B2B and B2C income.
 
 ## 7. Development & Compliance Practices
 
@@ -259,6 +260,7 @@ The application will be built mobile-first. All UI will be designed for the smal
 *   **Component Scoping:** We will default to Server Components, opting into Client Components (`"use client"`) only for interactive elements.
 *   **End-to-End Type Safety:** `TypeScript`, `Prisma`, and `Zod` will ensure data is strongly typed from the database to the UI.
 *   **Scraping Ethics & Robustness:** All scrapers will respect `robots.txt`, operate at a respectful rate, and clearly attribute the source. They will be wrapped in resilient error-handling logic with automated retries.
+*   **Proactive Performance & Security:** The application includes dedicated utilities for front-end performance (e.g., LCP optimization) and a rate-limited security alert system for robust monitoring.
 
 ### **Map Performance Optimizations**
 The application implements several advanced map performance features:
@@ -286,7 +288,7 @@ The application implements a granular Role-Based Access Control (RBAC) system to
 The RBAC system integrates with Next.js middleware to enforce permissions at both the UI and API levels.
 
 ### 7.3. Observability Strategy
-*   **Error Tracking:** A custom Winston-based logger writes errors to the Supabase database, capturing the error message, stack trace, and contextual information. The logger automatically retries failed database writes and falls back to console logging if database writes fail. Scraper failures are logged with full context for debugging.
+*   **Error Tracking:** A custom Winston-based logger that writes errors to the Supabase database, capturing the error message, stack trace, and contextual information. The logger automatically retries failed database writes and falls back to console logging if database writes fail. Scraper failures are logged with full context for debugging.
 *   **Performance Monitoring:** **Vercel Analytics** will be used to monitor Core Web Vitals and overall site performance.
 *   **Structured Logging:** The Content Aggregation Pipeline will use **structured logging** (e.g., JSON format) to provide a clear, traceable record of each run, including a run ID, number of events attempted, successes, failures, and reasons for failure.
 

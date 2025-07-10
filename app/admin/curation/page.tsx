@@ -79,9 +79,33 @@ export default function AdminCurationPage() {
         {draftEvents.length > 0 ? (
           <ul className="space-y-4">
             {draftEvents.map(event => (
-              <li key={event.id} className="border p-4 rounded">
-                <h3 className="font-medium">{event.title}</h3>
-                <p className="text-sm text-gray-600">{event.description}</p>
+              <li key={event.id} className="border p-4 rounded flex justify-between items-center">
+                <div>
+                  <h3 className="font-medium">{event.title}</h3>
+                  <p className="text-sm text-gray-600">{event.description}</p>
+                </div>
+                <Button
+                  onClick={async () => {
+                    try {
+                      const response = await fetch(`/api/admin/events/${event.id}`, {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ status: 'PUBLISHED' }),
+                      });
+                      if (response.ok) {
+                        setDraftEvents(draftEvents.filter(e => e.id !== event.id));
+                      } else {
+                        console.error('Failed to approve event:', await response.text());
+                      }
+                    } catch (error) {
+                      console.error('Error approving event:', error);
+                    }
+                  }}
+                >
+                  Approve
+                </Button>
               </li>
             ))}
           </ul>

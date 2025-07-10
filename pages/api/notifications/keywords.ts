@@ -22,6 +22,10 @@ export default async function handler(
     return res.status(404).json({ error: 'User not found' })
   }
 
+  if (user.subscriptionTier !== 'PRO') {
+    return res.status(403).json({ message: 'This feature is available for Pro subscribers only.' });
+  }
+
   try {
     switch (req.method) {
       case 'GET':

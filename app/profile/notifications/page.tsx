@@ -3,23 +3,41 @@
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { Button } from '../../../components/Button';
+import Link from 'next/link';
+import { User } from '@/types/db';
 
 export default function NotificationPreferences() {
   const { data: session, status } = useSession();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userProfile, setUserProfile] = useState<User | null>(null);
   const [keywords, setKeywords] = useState<string[]>([]);
   const [newKeyword, setNewKeyword] = useState('');
   const [keywordsLoading, setKeywordsLoading] = useState(false);
 
   useEffect(() => {
     if (status === 'authenticated' && session.user?.email) {
+      fetchUserProfile();
       checkSubscription();
       if (isSubscribed) {
         fetchKeywords();
       }
     }
   }, [status, session, isSubscribed]);
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetch('/api/profile');
+      if (response.ok) {
+        const data = await response.json();
+        setUserProfile(data);
+      } else {
+        console.error('Failed to fetch user profile');
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
 
   const fetchKeywords = async () => {
     try {
@@ -157,35 +175,47 @@ export default function NotificationPreferences() {
           </Button>
 
           <h2 className="text-xl font-semibold mt-6">Keyword Notifications</h2>
-          <ul className="space-y-2">
-            {keywords.map((keyword) => (
-              <li key={keyword} className="flex justify-between items-center">
-                <span>{keyword}</span>
+          {userProfile?.subscriptionTier === 'PRO' ? (
+            <>
+              <ul className="space-y-2">
+                {keywords.map((keyword) => (
+                  <li key={keyword} className="flex justify-between items-center">
+                    <span>{keyword}</span>
+                    <Button
+                      onClick={() => handleDeleteKeyword(keyword)}
+                      disabled={keywordsLoading}
+                      className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-3 py-1 text-sm"
+                    >
+                      Delete
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-2 mt-4">
+                <input
+                  type="text"
+                  value={newKeyword}
+                  onChange={(e) => setNewKeyword(e.target.value)}
+                  className="flex-1 border rounded px-3 py-2"
+                  placeholder="Enter keyword"
+                />
                 <Button
-                  onClick={() => handleDeleteKeyword(keyword)}
-                  disabled={keywordsLoading}
-                  className="bg-gray-200 text-gray-800 hover:bg-gray-300 px-3 py-1 text-sm"
+                  onClick={handleAddKeyword}
+                  disabled={keywordsLoading || !newKeyword.trim()}
                 >
-                  Delete
+                  Add Keyword
                 </Button>
-              </li>
-            ))}
-          </ul>
-          <div className="flex gap-2 mt-4">
-            <input
-              type="text"
-              value={newKeyword}
-              onChange={(e) => setNewKeyword(e.target.value)}
-              className="flex-1 border rounded px-3 py-2"
-              placeholder="Enter keyword"
-            />
-            <Button
-              onClick={handleAddKeyword}
-              disabled={keywordsLoading || !newKeyword.trim()}
-            >
-              Add Keyword
-            </Button>
-          </div>
+              </div>
+            </>
+          ) : (
+            <p>
+              Upgrade to{' '}
+              <Link href="/subscribe" className="text-blue-500 hover:underline">
+                Pro
+              </Link>{' '}
+              to unlock custom keyword notifications.
+            </p>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
